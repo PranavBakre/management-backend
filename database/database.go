@@ -38,12 +38,3 @@ func Connect() *gorm.DB {
 
 	return db
 }
-
-func Migrate() {
-	err := db.AutoMigrate(
-		// Add models to migrate here
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
