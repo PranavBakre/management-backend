@@ -42,11 +42,8 @@ func main() {
 	app.Use(recover.New())
 	app.Use(logger.New())
 
-	// Create a /api endpoint
-	endpoint := app.Group("/api")
-
-	// Bind api
-	api.BindAPI(endpoint, db, cfg)
+	// Add API routes to /api endpoint
+	api.AddRoutes(app.Group("/api"), db, cfg)
 
 	// Listen on port 3000
 	log.Fatal(app.Listen(*port)) // go run app.go -port=:3000
