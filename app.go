@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/PranavBakre/management-backend/api"
+	"github.com/PranavBakre/management-backend/config"
 	"github.com/PranavBakre/management-backend/database"
-	"os"
 
 	"flag"
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -26,8 +27,11 @@ func main() {
 	// Parse command-line flags
 	flag.Parse()
 
+	// Fetch config vars
+	cfg := config.GetConfig()
+
 	// Connected with database
-	database.Connect()
+	db := database.Connect(cfg)
 
 	// Create fiber app
 	app := fiber.New(fiber.Config{
@@ -38,11 +42,11 @@ func main() {
 	app.Use(recover.New())
 	app.Use(logger.New())
 
-	// Create a /api/v1 endpoint
-	v1 := app.Group("/api/v1")
+	// Create a /api endpoint
+	endpoint := app.Group("/api")
 
 	// Bind api
-	api.BindAPI(&v1)
+	api.BindAPI(endpoint, db, cfg)
 
 	// Listen on port 3000
 	log.Fatal(app.Listen(*port)) // go run app.go -port=:3000
