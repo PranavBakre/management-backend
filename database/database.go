@@ -12,29 +12,25 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB = nil
-
-func Connect() *gorm.DB {
-	if db == nil {
-		cfg := config.GetConfig()
-		if cfg.DBUri == "" {
-			log.Fatal("DB URI not set in config")
-		}
-
-		pgConn, err := sql.Open("pgx", cfg.DBUri)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		db, err = gorm.Open(postgres.New(postgres.Config{Conn: pgConn}))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		db = db.Debug()
-
-		log.Println("Database connected!")
+func Connect(cfg config.Config) *gorm.DB {
+	if cfg.DBUri == "" {
+		log.Fatal("DB URI not set in config")
 	}
+
+	// Open SQL connection
+	pgConn, err := sql.Open("pgx", cfg.DBUri)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Open gorm connection
+	db, err := gorm.Open(postgres.New(postgres.Config{Conn: pgConn}))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Log success
+	log.Println("Database connected!")
 
 	return db
 }

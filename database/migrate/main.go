@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/PranavBakre/management-backend/config"
 	"github.com/PranavBakre/management-backend/database"
 	"github.com/PranavBakre/management-backend/models"
 
@@ -8,7 +9,8 @@ import (
 )
 
 func main() {
-	db := database.Connect()
+	cfg := config.GetConfig()
+	db := database.Connect(cfg)
 
 	// Add UUID extension to postgres
 	result := db.Raw("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";").Scan(nil)
