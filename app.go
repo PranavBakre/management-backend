@@ -19,19 +19,21 @@ var (
 	prod = flag.Bool("prod", false, "Enable prefork in Production")
 )
 
-func main() {
+func init() {
 	// Configure logging
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
 	log.SetOutput(os.Stderr)
 
-	// Parse command-line flags
-	flag.Parse()
-
 	// Fetch config vars
-	cfg := config.GetConfig()
+	config.Init()
 
 	// Connected with database
-	db := database.Connect(cfg)
+	database.Connect()
+}
+
+func main() {
+	// Parse command-line flags
+	flag.Parse()
 
 	// Create fiber app
 	app := fiber.New(fiber.Config{
@@ -43,7 +45,7 @@ func main() {
 	app.Use(logger.New())
 
 	// Add API routes to /api endpoint
-	api.AddRoutes(app.Group("/api"), db, cfg)
+	api.AddRoutes(app.Group("/api"))
 
 	// Listen on port 3000
 	log.Fatal(app.Listen(*port)) // go run app.go -port=:3000

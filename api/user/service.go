@@ -21,7 +21,7 @@ type APIService interface {
 
 type Service struct {
 	DB     *gorm.DB
-	Config config.Config
+	Config *config.Config
 }
 
 /*

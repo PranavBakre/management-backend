@@ -12,7 +12,12 @@ import (
 	"gorm.io/gorm"
 )
 
-func Connect(cfg config.Config) *gorm.DB {
+// Unexported variable to implement singleton pattern
+var db *gorm.DB
+
+func Connect() {
+	// Fetch config to get DB URI
+	cfg := config.Get()
 	if cfg.DBUri == "" {
 		log.Fatal("DB URI not set in config")
 	}
@@ -24,13 +29,18 @@ func Connect(cfg config.Config) *gorm.DB {
 	}
 
 	// Open gorm connection
-	db, err := gorm.Open(postgres.New(postgres.Config{Conn: pgConn}))
+	db, err = gorm.Open(postgres.New(postgres.Config{Conn: pgConn}))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Log success
 	log.Println("Database connected!")
+}
 
+/*
+Get will return the config set in Init
+*/
+func Get() *gorm.DB {
 	return db
 }

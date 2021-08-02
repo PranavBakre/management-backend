@@ -2,14 +2,27 @@ package user
 
 import (
 	"github.com/PranavBakre/management-backend/config"
+	"github.com/PranavBakre/management-backend/database"
+
+	"log"
+
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 /*
 AddRoutes adds routes for all user endpoints to given router
 */
-func AddRoutes(router fiber.Router, db *gorm.DB, cfg config.Config) {
+func AddRoutes(router fiber.Router) {
+	// Fetch DB and config, and check if they've been set
+	db := database.Get()
+	if db == nil {
+		log.Fatalln("Connect to DB before adding routes")
+	}
+	cfg := config.Get()
+	if cfg == nil {
+		log.Fatalln("Read config variables before adding routes")
+	}
+
 	// Create new user service
 	svc := Service{
 		DB:     db,

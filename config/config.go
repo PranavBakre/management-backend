@@ -11,12 +11,13 @@ type Config struct {
 	DBUri string `mapstructure:"DB_URI"`
 }
 
-/*
-GetConfig will set all config variables in cfg if not already set, and cfg
-*/
-func GetConfig() Config {
-	var cfg Config
+// Unexported variable to implement singleton pattern
+var cfg *Config = nil
 
+/*
+Init will read all config variables from the .env and environment variables
+*/
+func Init() {
 	// Setup viper
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
@@ -44,6 +45,11 @@ func GetConfig() Config {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
+/*
+Get will return the config object set in Init
+*/
+func Get() *Config {
 	return cfg
 }
