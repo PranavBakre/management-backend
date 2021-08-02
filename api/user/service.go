@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/PranavBakre/management-backend/config"
 	"github.com/PranavBakre/management-backend/models"
+
 	"github.com/m4rw3r/uuid"
 	"log"
 
