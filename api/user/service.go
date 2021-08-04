@@ -3,11 +3,13 @@ package user
 import (
 	"github.com/PranavBakre/management-backend/config"
 	"github.com/PranavBakre/management-backend/models"
+	"github.com/PranavBakre/management-backend/utils"
 
-	"github.com/m4rw3r/uuid"
 	"log"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/m4rw3r/uuid"
 	"gorm.io/gorm"
 )
 
@@ -41,36 +43,40 @@ func (svc *Service) Create(ctx *fiber.Ctx) error {
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
-		return ctx.Status(500).SendString("User could not be added to DB")
+		log.Println("No row added")
+		return ctx.Status(http.StatusInternalServerError).SendString("User could not be added to DB")
 	}
 
-	return ctx.Status(201).JSON(user)
-}
-
-/*
-ReadAll returns all users in the DB
-*/
-func (svc *Service) ReadAll(ctx *fiber.Ctx) error {
-	var users []models.User
-
-	// Read all users from DB
-	result := svc.DB.Find(&users)
-	if result.Error != nil {
-		return result.Error
+	// Generate JWT token
+	token, err := utils.CreateToken(svc.Config, user.ID)
+	if err != nil {
+		log.Println(err)
+		return err
 	}
 
-	return ctx.JSON(users)
+	return ctx.Status(http.StatusCreated).JSON(fiber.Map{"token": token, "user": user})
 }
 
 /*
 Read returns a single user based on ID passed in params
 */
 func (svc *Service) Read(ctx *fiber.Ctx) error {
+	// Get ID from JWT
+	jwtID, err := utils.GetCurrentUserID(ctx)
+	if err != nil {
+		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+	}
+
 	// Get ID from params
 	id, err := uuid.FromString(ctx.Params("id"))
 	if err != nil {
 		log.Println(err)
-		return ctx.Status(400).SendString(err.Error())
+		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+	}
+
+	// Check if ID from params and JWT match
+	if id != jwtID {
+		return ctx.SendStatus(http.StatusUnauthorized)
 	}
 
 	// Fetch user from DB by ID
@@ -79,7 +85,7 @@ func (svc *Service) Read(ctx *fiber.Ctx) error {
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
-		return ctx.Status(404).SendString("User with ID " + id.String() + " not found")
+		return ctx.Status(http.StatusNotFound).SendString("User with ID " + id.String() + " not found")
 	}
 
 	return ctx.JSON(user)
@@ -89,12 +95,23 @@ func (svc *Service) Read(ctx *fiber.Ctx) error {
 Update will update a user record in DB and return updated object
 */
 func (svc *Service) Update(ctx *fiber.Ctx) error {
+	// Get ID from JWT
+	jwtID, err := utils.GetCurrentUserID(ctx)
+	if err != nil {
+		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+	}
+
 	// Read user data from request body
 	var user models.User
-	err := ctx.BodyParser(&user)
+	err = ctx.BodyParser(&user)
 	if err != nil {
 		log.Println(err)
 		return err
+	}
+
+	// Check if ID from params and JWT match
+	if user.ID != jwtID {
+		return ctx.SendStatus(http.StatusUnauthorized)
 	}
 
 	// Update user in DB
@@ -102,7 +119,7 @@ func (svc *Service) Update(ctx *fiber.Ctx) error {
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
-		return ctx.Status(404).SendString("User with ID " + user.ID.String() + " not found")
+		return ctx.Status(http.StatusNotFound).SendString("User with ID " + user.ID.String() + " not found")
 	}
 
 	return ctx.JSON(user)
@@ -112,11 +129,22 @@ func (svc *Service) Update(ctx *fiber.Ctx) error {
 Delete a user from the DB based on ID passed in params
 */
 func (svc *Service) Delete(ctx *fiber.Ctx) error {
+	// Get ID from JWT
+	jwtID, err := utils.GetCurrentUserID(ctx)
+	if err != nil {
+		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+	}
+
 	// Get ID from params
 	id, err := uuid.FromString(ctx.Params("id"))
 	if err != nil {
 		log.Println(err)
-		return ctx.Status(400).SendString(err.Error())
+		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+	}
+
+	// Check if ID from params and JWT match
+	if id != jwtID {
+		return ctx.SendStatus(http.StatusUnauthorized)
 	}
 
 	// Delete user from DB by ID
@@ -124,8 +152,8 @@ func (svc *Service) Delete(ctx *fiber.Ctx) error {
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
-		return ctx.Status(404).SendString("User with ID " + id.String() + " not found")
+		return ctx.Status(http.StatusNotFound).SendString("User with ID " + id.String() + " not found")
 	}
 
-	return ctx.SendStatus(200)
+	return ctx.SendStatus(http.StatusOK)
 }

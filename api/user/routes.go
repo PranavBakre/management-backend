@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/PranavBakre/management-backend/config"
 	"github.com/PranavBakre/management-backend/database"
+	"github.com/PranavBakre/management-backend/utils"
 
 	"log"
 
@@ -33,12 +34,11 @@ func AddRoutes(router fiber.Router) {
 	router.Post("/", svc.Create)
 
 	// Set routes for all GET requests
-	router.Get("/", svc.ReadAll)
-	router.Get("/:id", svc.Read)
+	router.Get("/:id", utils.JwtHandler(cfg, svc.Read))
 
 	// Set routes for all PATCH requests
-	router.Patch("/", svc.Update)
+	router.Patch("/", utils.JwtHandler(cfg, svc.Update))
 
 	// Set routes for all DELETE requests
-	router.Delete("/:id", svc.Delete)
+	router.Delete("/:id", utils.JwtHandler(cfg, svc.Delete))
 }
