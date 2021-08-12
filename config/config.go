@@ -8,7 +8,9 @@ import (
 
 type Config struct {
 	// DB connection string
-	DBUri     string `mapstructure:"DB_URI"`
+	DBUri string `mapstructure:"DB_URI"`
+
+	// Secret key for JWT
 	JwtSecret string `mapstructure:"JWT_SECRET"`
 }
 
