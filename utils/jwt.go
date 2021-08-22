@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v2"
 	"github.com/golang-jwt/jwt"
-	"github.com/m4rw3r/uuid"
+	"github.com/google/uuid"
 )
 
 /*
@@ -51,5 +51,5 @@ GetCurrentUserID will return the user ID set in the JWT token present in passed 
 func GetCurrentUserID(ctx *fiber.Ctx) (uuid.UUID, error) {
 	token := ctx.Locals("jwt").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
-	return uuid.FromString(claims["id"].(string))
+	return uuid.Parse(claims["id"].(string))
 }

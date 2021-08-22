@@ -9,7 +9,7 @@ import (
 	"management-backend/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/m4rw3r/uuid"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -68,7 +68,7 @@ func (svc *Service) Read(ctx *fiber.Ctx) error {
 	}
 
 	// Get ID from params
-	id, err := uuid.FromString(ctx.Params("id"))
+	id, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		log.Println(err)
 		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
@@ -136,7 +136,7 @@ func (svc *Service) Delete(ctx *fiber.Ctx) error {
 	}
 
 	// Get ID from params
-	id, err := uuid.FromString(ctx.Params("id"))
+	id, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		log.Println(err)
 		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
