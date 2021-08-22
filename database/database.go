@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/PranavBakre/management-backend/config"
+	"management-backend/config"
 
 	"database/sql"
 	"log"

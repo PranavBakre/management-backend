@@ -1,9 +1,9 @@
 package user
 
 import (
-	"github.com/PranavBakre/management-backend/config"
-	"github.com/PranavBakre/management-backend/models"
-	"github.com/PranavBakre/management-backend/utils"
+	"management-backend/config"
+	"management-backend/models"
+	"management-backend/utils"
 
 	"log"
 	"net/http"

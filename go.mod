@@ -1,4 +1,4 @@
-module github.com/PranavBakre/management-backend
+module management-backend
 
 go 1.16
 

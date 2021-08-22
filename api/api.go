@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/PranavBakre/management-backend/api/user"
+	"management-backend/api/user"
 
 	"github.com/gofiber/fiber/v2"
 )

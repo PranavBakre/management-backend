@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/PranavBakre/management-backend/database"
-	"github.com/PranavBakre/management-backend/models"
+	"management-backend/database"
+	"management-backend/models"
 
 	"log"
 )

@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/PranavBakre/management-backend/config"
+	"management-backend/config"
 	"github.com/golang-jwt/jwt"
 
 	"log"

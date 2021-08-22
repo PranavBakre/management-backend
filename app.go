@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/PranavBakre/management-backend/api"
-	"github.com/PranavBakre/management-backend/config"
-	"github.com/PranavBakre/management-backend/database"
+	"management-backend/api"
+	"management-backend/config"
+	"management-backend/database"
 
 	"flag"
 	"log"
