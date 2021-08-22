@@ -1,10 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"management-backend/database"
 	"management-backend/models"
-
-	"log"
 )
 
 func main() {

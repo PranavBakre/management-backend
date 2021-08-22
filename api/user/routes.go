@@ -1,11 +1,11 @@
 package user
 
 import (
+	"log"
+
 	"management-backend/config"
 	"management-backend/database"
 	"management-backend/utils"
-
-	"log"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -1,12 +1,12 @@
 package user
 
 import (
+	"log"
+	"net/http"
+
 	"management-backend/config"
 	"management-backend/models"
 	"management-backend/utils"
-
-	"log"
-	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/m4rw3r/uuid"

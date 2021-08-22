@@ -1,13 +1,13 @@
 package main
 
 import (
-	"management-backend/api"
-	"management-backend/config"
-	"management-backend/database"
-
 	"flag"
 	"log"
 	"os"
+
+	"management-backend/api"
+	"management-backend/config"
+	"management-backend/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"

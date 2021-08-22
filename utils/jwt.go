@@ -1,14 +1,14 @@
 package utils
 
 import (
-	"management-backend/config"
-	"github.com/golang-jwt/jwt"
-
 	"log"
 	"time"
 
+	"management-backend/config"
+
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v2"
+	"github.com/golang-jwt/jwt"
 	"github.com/m4rw3r/uuid"
 )
 

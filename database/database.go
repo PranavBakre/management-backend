@@ -1,10 +1,10 @@
 package database
 
 import (
-	"management-backend/config"
-
 	"database/sql"
 	"log"
+
+	"management-backend/config"
 
 	_ "github.com/jackc/pgx/v4"
 
