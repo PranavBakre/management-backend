@@ -4,8 +4,8 @@ go 1.16
 
 require (
 	github.com/andybalholm/brotli v1.0.3 // indirect
-	github.com/gofiber/fiber/v2 v2.16.0
-	github.com/gofiber/jwt/v2 v2.2.5
+	github.com/gofiber/fiber/v2 v2.17.0
+	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.1.2
 	github.com/jackc/pgx/v4 v4.13.0
