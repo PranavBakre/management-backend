@@ -15,5 +15,5 @@ require (
 	github.com/valyala/fasthttp v1.28.0 // indirect
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	gorm.io/driver/postgres v1.1.0
-	gorm.io/gorm v1.21.12
+	gorm.io/gorm v1.21.14
 )
