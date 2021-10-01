@@ -2,7 +2,7 @@
 FROM golang:1.15 AS build
 
 # `boilerplate` should be replaced with your project name
-WORKDIR /go/src/github.com/PranavBakre/management-backend
+WORKDIR /go/src/management-backend
 
 # Copy all the Code and stuff to compile everything
 COPY . .
@@ -20,7 +20,7 @@ FROM alpine:latest
 WORKDIR /app
 
 # `boilerplate` should be replaced here as well
-COPY --from=build /go/src/github.com/PranavBakre/management-backend/app .
+COPY --from=build /go/src/management-backend/app .
 
 # Exposes port 3000 because our program listens on that port
 EXPOSE 3000
