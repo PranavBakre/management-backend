@@ -25,4 +25,4 @@ COPY --from=build /go/src/github.com/PranavBakre/management-backend/app .
 # Exposes port 3000 because our program listens on that port
 EXPOSE 3000
 
-CMD ["./app"]
+CMD ["./app", "--prod"]
