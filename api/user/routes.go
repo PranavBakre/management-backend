@@ -25,20 +25,20 @@ func AddRoutes(router fiber.Router) {
 	}
 
 	// Create new user service
-	svc := Service{
+	h := Handlers{
 		DB:     db,
 		Config: cfg,
 	}
 
 	// Set routes for all POST requests
-	router.Post("/", svc.Create)
+	router.Post("/", h.Create)
 
 	// Set routes for all GET requests
-	router.Get("/:id", utils.JwtHandler(cfg, svc.Read))
+	router.Get("/:id", utils.JwtHandler(cfg, h.Read))
 
 	// Set routes for all PATCH requests
-	router.Patch("/", utils.JwtHandler(cfg, svc.Update))
+	router.Patch("/", utils.JwtHandler(cfg, h.Update))
 
 	// Set routes for all DELETE requests
-	router.Delete("/:id", utils.JwtHandler(cfg, svc.Delete))
+	router.Delete("/:id", utils.JwtHandler(cfg, h.Delete))
 }
