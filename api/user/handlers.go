@@ -21,7 +21,7 @@ type APIService interface {
 	Delete(ctx *fiber.Ctx) error
 }
 
-type Service struct {
+type Handler struct {
 	DB     *gorm.DB
 	Config *config.Config
 }
@@ -29,7 +29,7 @@ type Service struct {
 /*
 Create will add a new user to DB and return the created user
 */
-func (svc *Service) Create(ctx *fiber.Ctx) error {
+func (h *Handler) Create(ctx *fiber.Ctx) error {
 	// Read user data from request body
 	var user models.User
 	err := ctx.BodyParser(&user)
@@ -39,7 +39,7 @@ func (svc *Service) Create(ctx *fiber.Ctx) error {
 	}
 
 	// Add user to DB
-	result := svc.DB.Create(&user)
+	result := h.DB.Create(&user)
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
@@ -48,7 +48,7 @@ func (svc *Service) Create(ctx *fiber.Ctx) error {
 	}
 
 	// Generate JWT token
-	token, err := utils.CreateToken(svc.Config, user.ID)
+	token, err := utils.CreateToken(h.Config, user.ID)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -60,7 +60,7 @@ func (svc *Service) Create(ctx *fiber.Ctx) error {
 /*
 Read returns a single user based on ID passed in params
 */
-func (svc *Service) Read(ctx *fiber.Ctx) error {
+func (h *Handler) Read(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {
@@ -81,7 +81,7 @@ func (svc *Service) Read(ctx *fiber.Ctx) error {
 
 	// Fetch user from DB by ID
 	var user models.User
-	result := svc.DB.Where("id = ?", id.String()).Find(&user)
+	result := h.DB.Where("id = ?", id.String()).Find(&user)
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
@@ -94,7 +94,7 @@ func (svc *Service) Read(ctx *fiber.Ctx) error {
 /*
 Update will update a user record in DB and return updated object
 */
-func (svc *Service) Update(ctx *fiber.Ctx) error {
+func (h *Handler) Update(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {
@@ -115,7 +115,7 @@ func (svc *Service) Update(ctx *fiber.Ctx) error {
 	}
 
 	// Update user in DB
-	result := svc.DB.Where("id = ?", user.ID.String()).Updates(&user)
+	result := h.DB.Where("id = ?", user.ID.String()).Updates(&user)
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
@@ -128,7 +128,7 @@ func (svc *Service) Update(ctx *fiber.Ctx) error {
 /*
 Delete a user from the DB based on ID passed in params
 */
-func (svc *Service) Delete(ctx *fiber.Ctx) error {
+func (h *Handler) Delete(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {
@@ -148,7 +148,7 @@ func (svc *Service) Delete(ctx *fiber.Ctx) error {
 	}
 
 	// Delete user from DB by ID
-	result := svc.DB.Where("id = ?", id.String()).Delete(&models.User{})
+	result := h.DB.Where("id = ?", id.String()).Delete(&models.User{})
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
