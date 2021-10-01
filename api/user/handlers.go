@@ -21,7 +21,7 @@ type APIService interface {
 	Delete(ctx *fiber.Ctx) error
 }
 
-type Handlers struct {
+type Handler struct {
 	DB     *gorm.DB
 	Config *config.Config
 }
@@ -29,7 +29,7 @@ type Handlers struct {
 /*
 Create will add a new user to DB and return the created user
 */
-func (h *Handlers) Create(ctx *fiber.Ctx) error {
+func (h *Handler) Create(ctx *fiber.Ctx) error {
 	// Read user data from request body
 	var user models.User
 	err := ctx.BodyParser(&user)
@@ -60,7 +60,7 @@ func (h *Handlers) Create(ctx *fiber.Ctx) error {
 /*
 Read returns a single user based on ID passed in params
 */
-func (h *Handlers) Read(ctx *fiber.Ctx) error {
+func (h *Handler) Read(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {
@@ -94,7 +94,7 @@ func (h *Handlers) Read(ctx *fiber.Ctx) error {
 /*
 Update will update a user record in DB and return updated object
 */
-func (h *Handlers) Update(ctx *fiber.Ctx) error {
+func (h *Handler) Update(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {
@@ -128,7 +128,7 @@ func (h *Handlers) Update(ctx *fiber.Ctx) error {
 /*
 Delete a user from the DB based on ID passed in params
 */
-func (h *Handlers) Delete(ctx *fiber.Ctx) error {
+func (h *Handler) Delete(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {

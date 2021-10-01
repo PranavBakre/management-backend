@@ -25,7 +25,7 @@ func AddRoutes(router fiber.Router) {
 	}
 
 	// Create new user service
-	h := Handlers{
+	h := Handler{
 		DB:     db,
 		Config: cfg,
 	}
