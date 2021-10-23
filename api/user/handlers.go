@@ -2,8 +2,6 @@ package user
 
 import (
 	"log"
-	"net/http"
-
 	"management-backend/config"
 	"management-backend/models"
 	"management-backend/utils"
@@ -44,7 +42,7 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 		return result.Error
 	} else if result.RowsAffected == 0 {
 		log.Println("No row added")
-		return ctx.Status(http.StatusInternalServerError).SendString("User could not be added to DB")
+		return ctx.Status(fiber.StatusInternalServerError).SendString("User could not be added to DB")
 	}
 
 	// Generate JWT token
@@ -54,7 +52,7 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(http.StatusCreated).JSON(fiber.Map{"token": token, "user": user})
+	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"token": token, "user": user})
 }
 
 /*
@@ -64,19 +62,19 @@ func (h *Handler) Read(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {
-		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	// Get ID from params
 	id, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		log.Println(err)
-		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	// Check if ID from params and JWT match
 	if id != jwtID {
-		return ctx.SendStatus(http.StatusUnauthorized)
+		return ctx.SendStatus(fiber.StatusUnauthorized)
 	}
 
 	// Fetch user from DB by ID
@@ -85,7 +83,7 @@ func (h *Handler) Read(ctx *fiber.Ctx) error {
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
-		return ctx.Status(http.StatusNotFound).SendString("User with ID " + id.String() + " not found")
+		return ctx.Status(fiber.StatusNotFound).SendString("User with ID " + id.String() + " not found")
 	}
 
 	return ctx.JSON(user)
@@ -98,7 +96,7 @@ func (h *Handler) Update(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {
-		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	// Read user data from request body
@@ -111,7 +109,7 @@ func (h *Handler) Update(ctx *fiber.Ctx) error {
 
 	// Check if ID from params and JWT match
 	if user.ID != jwtID {
-		return ctx.SendStatus(http.StatusUnauthorized)
+		return ctx.SendStatus(fiber.StatusUnauthorized)
 	}
 
 	// Update user in DB
@@ -119,7 +117,7 @@ func (h *Handler) Update(ctx *fiber.Ctx) error {
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
-		return ctx.Status(http.StatusNotFound).SendString("User with ID " + user.ID.String() + " not found")
+		return ctx.Status(fiber.StatusNotFound).SendString("User with ID " + user.ID.String() + " not found")
 	}
 
 	return ctx.JSON(user)
@@ -132,19 +130,19 @@ func (h *Handler) Delete(ctx *fiber.Ctx) error {
 	// Get ID from JWT
 	jwtID, err := utils.GetCurrentUserID(ctx)
 	if err != nil {
-		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	// Get ID from params
 	id, err := uuid.Parse(ctx.Params("id"))
 	if err != nil {
 		log.Println(err)
-		return ctx.Status(http.StatusBadRequest).SendString(err.Error())
+		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	// Check if ID from params and JWT match
 	if id != jwtID {
-		return ctx.SendStatus(http.StatusUnauthorized)
+		return ctx.SendStatus(fiber.StatusUnauthorized)
 	}
 
 	// Delete user from DB by ID
@@ -152,8 +150,8 @@ func (h *Handler) Delete(ctx *fiber.Ctx) error {
 	if result.Error != nil {
 		return result.Error
 	} else if result.RowsAffected == 0 {
-		return ctx.Status(http.StatusNotFound).SendString("User with ID " + id.String() + " not found")
+		return ctx.Status(fiber.StatusNotFound).SendString("User with ID " + id.String() + " not found")
 	}
 
-	return ctx.SendStatus(http.StatusOK)
+	return ctx.SendStatus(fiber.StatusOK)
 }
