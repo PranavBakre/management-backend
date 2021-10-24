@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build image.
-        run: docker build -t ghcr.io/PranavBakre/management-backend .
+        run: docker build -t ghcr.io/pranavbakre/management-backend .
       - name: Login to container registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io --username PranavBakre --password-stdin
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io --username pranavbakre --password-stdin
       - name: Push image
-        run: docker push ghcr.io/PranavBakre/management-backend
+        run: docker push ghcr.io/pranavbakre/management-backend
