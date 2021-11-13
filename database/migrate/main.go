@@ -25,7 +25,7 @@ func main() {
 	db := database.Get()
 
 	// Add UUID extension to postgres
-	result := db.Raw("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
+	result := db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
