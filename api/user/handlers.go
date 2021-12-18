@@ -4,7 +4,7 @@ import (
 	"log"
 	"management-backend/config"
 	"management-backend/models"
-	"management-backend/utils"
+	"management-backend/utils/jwt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -46,7 +46,7 @@ func (h *Handler) Create(ctx *fiber.Ctx) error {
 	}
 
 	// Generate JWT token
-	token, err := utils.CreateToken(h.Config, user.ID)
+	token, err := jwt.CreateToken(h.Config, user.ID)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -60,7 +60,7 @@ Read returns a single user based on ID passed in params
 */
 func (h *Handler) Read(ctx *fiber.Ctx) error {
 	// Get ID from JWT
-	jwtID, err := utils.GetCurrentUserID(ctx)
+	jwtID, err := jwt.GetCurrentUserID(ctx)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
@@ -94,7 +94,7 @@ Update will update a user record in DB and return updated object
 */
 func (h *Handler) Update(ctx *fiber.Ctx) error {
 	// Get ID from JWT
-	jwtID, err := utils.GetCurrentUserID(ctx)
+	jwtID, err := jwt.GetCurrentUserID(ctx)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
@@ -128,7 +128,7 @@ Delete a user from the DB based on ID passed in params
 */
 func (h *Handler) Delete(ctx *fiber.Ctx) error {
 	// Get ID from JWT
-	jwtID, err := utils.GetCurrentUserID(ctx)
+	jwtID, err := jwt.GetCurrentUserID(ctx)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}

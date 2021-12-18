@@ -5,7 +5,7 @@ import (
 
 	"management-backend/config"
 	"management-backend/database"
-	"management-backend/utils"
+	"management-backend/utils/jwt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -34,11 +34,11 @@ func AddRoutes(router fiber.Router) {
 	router.Post("/", h.Create)
 
 	// Set routes for all GET requests
-	router.Get("/:id", utils.JwtHandler(cfg, h.Read))
+	router.Get("/:id", jwt.JwtHandler(cfg, h.Read))
 
 	// Set routes for all PATCH requests
-	router.Patch("/", utils.JwtHandler(cfg, h.Update))
+	router.Patch("/", jwt.JwtHandler(cfg, h.Update))
 
 	// Set routes for all DELETE requests
-	router.Delete("/:id", utils.JwtHandler(cfg, h.Delete))
+	router.Delete("/:id", jwt.JwtHandler(cfg, h.Delete))
 }

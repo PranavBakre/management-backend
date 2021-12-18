@@ -12,6 +12,15 @@ type Config struct {
 
 	// Secret key for JWT
 	JwtSecret string `mapstructure:"JWT_SECRET"`
+
+	//Google Client Id
+	ClientId string `mapstructure:"CLIENT_ID"`
+
+	//Google Client Secret
+	ClientSecret string `mapstructure:"CLIENT_SECRET"`
+
+	//Redirect Uri
+	RedirectUri string `mapstructure:"REDIRECT_URI"`
 }
 
 // Unexported variable to implement singleton pattern
@@ -29,7 +38,9 @@ func Init() {
 	// Set default values for config vars
 	viper.SetDefault("DB_URI", "")
 	viper.SetDefault("JWT_SECRET", "")
-
+	viper.SetDefault("CLIENT_ID", "")
+	viper.SetDefault("CLIENT_SECRET", "")
+	viper.SetDefault("REDIRECT_URI", "")
 	// Automatically override values in config file with those in environment
 	viper.AutomaticEnv()
 
