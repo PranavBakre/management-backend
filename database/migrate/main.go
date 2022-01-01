@@ -37,15 +37,11 @@ func main() {
 		&models.Role{},
 		&models.Right{},
 	)
+
 	var godRight = models.Right{
 		Right: "GOD",
 	}
-
-	result = db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "right"}},
-		DoNothing: true,
-	}).Create(&godRight)
-
+	result = db.FirstOrCreate(&godRight)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
@@ -55,11 +51,7 @@ func main() {
 		Rights: []models.Right{godRight},
 	}
 
-	result = db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "role"}},
-		DoNothing: true,
-	}).Create(&godRole)
-
+	result = db.FirstOrCreate(&godRole)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
@@ -70,9 +62,9 @@ func main() {
 		Email:    cfg.SuperUserEmail,
 		Roles:    []models.Role{godRole},
 	}
-
-	result = db.Clauses(clause.OnConflict{
-		Columns: []clause.Column{{Name: "google_id"}}, UpdateAll: true}).Create(&god)
+	result = db.
+		Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "google_id"}}, UpdateAll: true}).
+		Create(&god)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
