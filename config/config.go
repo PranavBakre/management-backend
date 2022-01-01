@@ -21,6 +21,12 @@ type Config struct {
 
 	//Redirect Uri
 	RedirectUri string `mapstructure:"REDIRECT_URI"`
+
+	SuperUserGoogleId string `mapstructure:"SUPERUSER_GOOGLE_ID"`
+
+	SuperUserName string `mapstructure:"SUPERUSER_NAME"`
+
+	SuperUserEmail string `mapstructure:"SUPERUSER_EMAIL"`
 }
 
 // Unexported variable to implement singleton pattern
@@ -41,6 +47,9 @@ func Init() {
 	viper.SetDefault("CLIENT_ID", "")
 	viper.SetDefault("CLIENT_SECRET", "")
 	viper.SetDefault("REDIRECT_URI", "")
+	viper.SetDefault("SUPERUSER_GOOGLE_ID", "")
+	viper.SetDefault("SUPERUSER_NAME", "")
+	viper.SetDefault("SUPERUSER_EMAIL", "")
 	// Automatically override values in config file with those in environment
 	viper.AutomaticEnv()
 

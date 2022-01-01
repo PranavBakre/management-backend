@@ -7,6 +7,8 @@ import (
 	"management-backend/config"
 	"management-backend/database"
 	"management-backend/models"
+
+	"gorm.io/gorm/clause"
 )
 
 func init() {
@@ -23,17 +25,57 @@ func init() {
 
 func main() {
 	db := database.Get()
-
+	cfg := config.Get()
 	// Add UUID extension to postgres
 	result := db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
-
 	// Migrate all models
 	err := db.AutoMigrate(
 		&models.User{},
+		&models.Role{},
+		&models.Right{},
 	)
+	var godRight = models.Right{
+		Right: "GOD",
+	}
+
+	result = db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "right"}},
+		DoNothing: true,
+	}).Create(&godRight)
+
+	if result.Error != nil {
+		log.Fatal(result.Error)
+	}
+
+	var godRole = models.Role{
+		Role:   "GOD",
+		Rights: []models.Right{godRight},
+	}
+
+	result = db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "role"}},
+		DoNothing: true,
+	}).Create(&godRole)
+
+	if result.Error != nil {
+		log.Fatal(result.Error)
+	}
+
+	var god = models.User{
+		GoogleID: &cfg.SuperUserGoogleId,
+		Name:     cfg.SuperUserName,
+		Email:    cfg.SuperUserEmail,
+		Roles:    []models.Role{godRole},
+	}
+
+	result = db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "google_id"}}, UpdateAll: true}).Create(&god)
+	if result.Error != nil {
+		log.Fatal(result.Error)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}

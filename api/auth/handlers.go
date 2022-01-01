@@ -10,6 +10,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type APIService interface {
@@ -45,24 +46,19 @@ func (h *Handler) Login(ctx *fiber.Ctx) error {
 
 	userinfo, err := googleApiClient.FetchSelfInfo(googleTokenResponse.AccessToken)
 
-	// var user = models.User{
-	// 	Name:     userinfo.Name,
-	// 	Email:    userinfo.Email,
-	// 	GoogleID: &userinfo.Id,
-	// 	Picture:  &userinfo.Picture,
-	// }
+	user := &models.User{
+		Name:     userinfo.Name,
+		Email:    userinfo.Email,
+		GoogleID: &userinfo.Id,
+		Picture:  &userinfo.Picture,
+	}
 
-	user := new(models.User)
-	result := h.DB.Where("google_id = ?", userinfo.Id).Find(user)
-	if result.Error == gorm.ErrRecordNotFound {
-		user = &models.User{
-			Name:     userinfo.Name,
-			Email:    userinfo.Email,
-			GoogleID: &userinfo.Id,
-			Picture:  &userinfo.Picture,
-		}
-		h.DB.Create(user)
-	} else if result.Error != nil {
+	result := h.DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "google_id"}},
+		UpdateAll: true,
+	}).Create(user)
+
+	if result.Error != nil {
 		return err
 	}
 

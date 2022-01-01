@@ -31,8 +31,9 @@ func init() {
 	// Fetch config vars
 	config.Init()
 
-	//Init googleApiClient
 	cfg := config.Get()
+
+	//Init googleApiClient
 	googleapis.Init(
 		cfg.ClientId,
 		cfg.ClientSecret,
