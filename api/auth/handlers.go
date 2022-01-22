@@ -55,7 +55,7 @@ func (h *Handler) Login(ctx *fiber.Ctx) error {
 
 	result := h.DB.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "google_id"}},
-		UpdateAll: true,
+		DoUpdates: clause.AssignmentColumns([]string{"name", "email", "picture"}),
 	}).Create(user)
 
 	if result.Error != nil {
