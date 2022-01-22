@@ -63,7 +63,10 @@ func main() {
 		Roles:    []models.Role{godRole},
 	}
 	result = db.
-		Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "google_id"}}, UpdateAll: true}).
+		Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "google_id"}},
+			DoUpdates: clause.AssignmentColumns([]string{"google_id", "name", "email"}),
+		}).
 		Create(&god)
 	if result.Error != nil {
 		log.Fatal(result.Error)
