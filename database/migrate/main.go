@@ -65,7 +65,7 @@ func main() {
 	result = db.
 		Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "google_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"google_id", "name", "email"}),
+			DoNothing: true,
 		}).
 		Create(&god)
 	if result.Error != nil {
